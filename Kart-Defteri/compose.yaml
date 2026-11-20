@@ -1,0 +1,28 @@
+services:
+  ledger:
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      LEDGER_KEY: ${LEDGER_KEY:?LEDGER_KEY ayarlanmalı}
+      LEDGER_DATA: /data/ledger.json
+    volumes:
+      - ledger_data:/data
+    restart: unless-stopped
+  https:
+    image: caddy:2
+    environment:
+      LEDGER_DOMAIN: ${LEDGER_DOMAIN:?LEDGER_DOMAIN ayarlanmalı}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Server/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+volumes:
+  ledger_data:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,3 @@
+{$LEDGER_DOMAIN} {
+    reverse_proxy ledger:8080
+}
